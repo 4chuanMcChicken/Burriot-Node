@@ -37,8 +37,7 @@ const wallet = () => {
     if (num >= 1e15) {
       return (num / 1e15).toFixed(2) + 'B';
     } else if (num >= 1e12) {
-      return (num / 1e12).toFixed(2atorId) => {
-    setImageLoadErrors(prev => ne) + 'M';
+      return (num / 1e12).toFixed(2) + 'M';
     } else {
       return num.toString();
     }
@@ -51,7 +50,8 @@ const wallet = () => {
   };
 
 
-  const handleImageError = (validw Set(prev).add(validatorId));
+  const handleImageError = (validatorId) => {
+    setImageLoadErrors(prev => new Set(prev).add(validatorId));
   };
 
   const parseValue = (value) => {
