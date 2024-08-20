@@ -40,7 +40,6 @@ const ConnectWalletButton = () => {
       dispatch(
         setWalletInfo({
           address: connectedWallet.addresses['columbus-5'],
-          name: connectedWallet.name,
         }),
       );
     } else {

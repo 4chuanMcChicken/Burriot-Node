@@ -11,11 +11,25 @@ import { ChevronRightIcon } from 'lucide-react';
 import WalletIcon from '@mui/icons-material/Wallet';
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
 
+import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/lib/store';
+import { useEffect } from 'react';
+
 export default function StationLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+  const walletInfo = useSelector((state: RootState) => state.tokenInfo);
+
+  useEffect(() => {
+    if (!walletInfo.address) {
+      router.push('/');
+    }
+  }, [walletInfo, router]);
+
   const [selectedButton, setSelectedButton] = useState<number>(1);
   const buttons = [
     {
