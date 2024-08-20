@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { Button, Popover, Box, Typography } from '@mui/material';
+import { Button, Popover } from '@mui/material';
 import WalletIcon from '@mui/icons-material/Wallet';
 import LogoutIcon from '@mui/icons-material/Logout';
-import HubOutlinedIcon from '@mui/icons-material/HubOutlined';
 import { useConnectedWallet, useWallet } from '@terra-money/wallet-kit';
+import { useDispatch } from 'react-redux';
+import { setWalletInfo, resetWalletInfo } from '@/lib/slices/walletInfoSlice'; // 根据实际路径修改
 
 const ConnectWalletButton = () => {
+  const dispatch = useDispatch();
   const connectedWallet = useConnectedWallet();
   const { connect, disconnect, availableWallets } = useWallet();
 
@@ -31,6 +33,21 @@ const ConnectWalletButton = () => {
     connect(walletId);
     handleClose(); // 连接钱包后关闭 Popover
   };
+
+  useEffect(() => {
+    if (connectedWallet) {
+      // 将地址和名称同步到 Redux 中
+      dispatch(
+        setWalletInfo({
+          address: connectedWallet.addresses['columbus-5'],
+          name: connectedWallet.name,
+        }),
+      );
+    } else {
+      // 当钱包断开时，重置 Redux 状态
+      dispatch(resetWalletInfo());
+    }
+  }, [connectedWallet, dispatch]); // 当 connectedWallet 状态变化时触发
 
   return (
     <div>
