@@ -10,8 +10,6 @@ import { AnimatedSubscribeButton } from '@/components/magicui/AnimatedSubscribeB
 import { ChevronRightIcon } from 'lucide-react';
 import WalletIcon from '@mui/icons-material/Wallet';
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
-import Wallet from './wallet';
-import Staking from './Staking';
 
 export default function StationLayout({
   children,
