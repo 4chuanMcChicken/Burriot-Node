@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth overflow-hidden">
       <body
-        className={`${inter.variable} bg-black font-inter tracking-tight text-gray-900 antialiased`}
+        className={`${inter.variable} bg-gray-50 font-inter tracking-tight text-gray-900 antialiased`}
       >
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
