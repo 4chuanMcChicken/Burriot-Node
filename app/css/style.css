@@ -7,3 +7,11 @@
 @import "additional-styles/theme.css";
 
 @import "tailwindcss/utilities";
+
+.hover-effect {
+    transition: background-color 0.3s ease;
+  }
+  
+  .hover-effect:hover {
+    background-color: #f0f0f0;
+  }
