@@ -25,9 +25,6 @@ const wallet = () => {
   const [imageLoadErrors, setImageLoadErrors] = useState(new Set());
   const chainID = 'columbus-5';
 
-  const validators_url = `https://terra-classic-lcd.publicnode.com/cosmos/staking/v1beta1/validators?status=BOND_STATUS_BONDED`
-  const pool_url = 'https://terra-classic-lcd.publicnode.com/cosmos/staking/v1beta1/pool'
-
   const headCells = [
     { id: 'rank', numeric: true, label: 'Rank' },
     { id: 'moniker', numeric: false, label: 'Moniker' },
@@ -93,14 +90,12 @@ const wallet = () => {
     const poolUrl = 'https://terra-classic-lcd.publicnode.com/cosmos/staking/v1beta1/pool';
     const validatorsUrl = 'https://terra-classic-lcd.publicnode.com/cosmos/staking/v1beta1/validators?status=BOND_STATUS_BONDED';
   
-    // 获取pool信息
     fetch(poolUrl)
       .then(response => response.json())
       .then(poolData => {
         const bondedTokens = parseInt(poolData.pool.bonded_tokens);
         setTotalBondedTokens(bondedTokens);
   
-        // 获取validators信息
         fetch(validatorsUrl)
           .then(response => response.json())
           .then(validatorsData => {
@@ -108,6 +103,7 @@ const wallet = () => {
             const unsortedData = validators.map((val, index) => {
               const votingPowerPercentage = ((parseInt(val.tokens) / bondedTokens) * 100).toFixed(2) + '%';
               return {
+                operator_address: val.operator_address,
                 totalStaked: formatNumber(parseInt(val.tokens)),
                 votingPower: votingPowerPercentage,
                 commissionRate: `${(parseFloat(val.commission.commission_rates.rate) * 100).toFixed(2)}%`,
@@ -206,7 +202,7 @@ const wallet = () => {
                                 />
                               )}
                             </div>
-                            <Link href={`/station/staking/${validator.description.id}`} passHref>
+                            <Link href={`/station/staking/${validator.operator_address}`} passHref>
                               <div style={{
                                   maxWidth: '270px',
                                   whiteSpace: 'nowrap',
