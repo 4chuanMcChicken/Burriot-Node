@@ -1,13 +1,18 @@
 'use client';
-
-import { useParams } from 'next/navigation';
+import { useConnectedWallet, useLcdClient } from '@terra-money/wallet-kit';
+import { useParams, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState, useMemo } from 'react';
 import PersonIcon from '@mui/icons-material/Person';
+import Modal from '@/components/staking/delagation'
 
 
 const Details = () => {
   const params = useParams();
   const {id} = params;
+  const [searchParams] = useSearchParams();
+  const connected = useConnectedWallet();
+  // const rank = searchParams.get('rank');
+  const rank = searchParams[1]
   const [validatorInfo, setValidatorInfo] = useState(
     {
       description: {
@@ -20,6 +25,7 @@ const Details = () => {
       votingPower: '',
       lastUpdated: '',
       commissionDetails: {},
+      selfBonded: 0,
       delegator_shares: '',
       imageLoaded: true,
       status: ''
@@ -30,6 +36,16 @@ const Details = () => {
   const handleImageError = () => {
     console.log(validatorInfo.description.id)
     setValidatorInfo(prev => ({ ...prev, imageLoaded: false }));
+  };
+
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
   };
 
   function formatNumber(num) {
@@ -58,6 +74,7 @@ const Details = () => {
           .then(validatorData => {
             const validator = validatorData.validator
             const votingPowerPercentage = ((parseInt(validator.tokens) / bondedTokens) * 100).toFixed(2) + '%';
+            console.log(parseFloat(validator.tokens) - parseFloat(validator.delegator_shares))
             setValidatorInfo({
               totalStaked: formatNumber(parseInt(validator.tokens)),
               votingPower: votingPowerPercentage,
@@ -74,6 +91,7 @@ const Details = () => {
                 id: validator.description.identity
               },
               delegator_shares: formatNumber(parseInt(validator.delegator_shares)),
+              selfBonded: parseFloat(validator.tokens) - parseFloat(validator.delegator_shares),
               imageLoaded: true,
               status: validator.jailed ? 'JAILED' : 'ACTIVE'
             });
@@ -146,11 +164,30 @@ const Details = () => {
               </span>
             </div>
           </div>
-          <div className='el-Popover overflow-hidden [&>*]:float-left el-Dropdown relative flex cursor-pointer items-center rounded-16 max-md:h-[48px] [&>svg]:pointer-events-none border-0 bg-headerControlsBg hover:bg-colorWhite/10 h-[48px]'>
-              <button className='text-white mt-2 mb-2 ml-2 mr-2 h-[48px] min-w-[48px] px-1'>
-                Delegation
-              </button>
-            </div>
+          {connected ? (
+  <div className='el-Popover overflow-hidden [&>*]:float-left el-Dropdown relative flex cursor-pointer items-center rounded-16 max-md:h-[48px] [&>svg]:pointer-events-none border-0 bg-headerControlsBg hover:bg-colorWhite/10 h-[48px]'>
+    <button
+      className='text-white mt-2 mb-2 ml-2 mr-2 h-[48px] min-w-[48px] px-1'
+      disabled={!connected}
+      onClick={handleOpenModal}
+    >
+      Delegate
+    </button>
+    {isModalOpen && (
+        <Modal onClose={handleCloseModal} validatorId={id}>
+        </Modal>
+      )}
+  </div>
+) : (
+  <div className='el-Popover overflow-hidden [&>*]:float-left el-Dropdown relative flex cursor-pointer items-center rounded-16 max-md:h-[48px] [&>svg]:pointer-events-none border-0 bg-headerControlsBg hover:bg-colorWhite/10 h-[48px]'>
+    <button
+      className='text-white mt-2 mb-2 ml-2 mr-2 h-[48px] min-w-[48px] px-1'
+      disabled={true}
+    >
+      Delegate
+    </button>
+  </div>
+)}
         </div>
         <div className='ml-[112px] flex flex-col gap-2 max-md:ml-0 max-md:gap-1'>
           <span className='el-Text m-0 inline text-left transition-colors duration-default ease-default text-lg leading-[24px] text-grayBrandColor max-md:text-sm max-md:leading-20px [&_.el-Link]:inline [&_.el-Link]:text-link [&_.el-Link]:hover:text-linkHover'>
@@ -164,7 +201,7 @@ const Details = () => {
           <div className='el-DashboardCardContent flex-1 flex items-center justify-between max-sm:flex-col-reverse max-sm:gap-1.5'>
             <div className='el-TextBlock flex flex-col gap-1 max-sm:items-center max-sm:gap-0.2'>
               <p className='text-xl text-colorWhite max-sm:text-md'>
-                # 1 of 100
+                #{rank} of 100
               </p>
               <p className='whitespace-nowrap text-lg font-500 max-sm:text-sm text-primaryColor'>
                 <span className='flex items-center gap-0.5 text-white'>
@@ -195,7 +232,7 @@ const Details = () => {
                   {validatorInfo.status}
                 </p>
                 <p className='whitespace-nowrap text-lg font-500 max-sm:text-sm text-successColor'>
-                  over 2 years
+                  Updates from {validatorInfo.lastUpdated}
                 </p>
               </div>
             </div>
@@ -205,16 +242,16 @@ const Details = () => {
           <div className='el-DashboardCardContent flex-1 flex items-center justify-between max-sm:flex-col-reverse max-sm:gap-1.5'>
             <div className='el-TextBlock flex flex-col gap-1 max-sm:items-center max-sm:gap-0.2'>
               <p className='text-xl text-colorWhite max-sm:text-md'>
-                99.99%
+                {validatorInfo.totalStaked} LUNC
               </p>
               <p className='whitespace-nowrap text-lg font-500 max-sm:text-sm text-successColor'>
-                Uptime
+                Delegated
               </p>
             </div>
           </div>
         </div>
 
-        <div className='group/AnimateArrow relative flex w-full flex-col rounded-20 bg-dashboardCardBg/75 p-[35px] transition duration-default max-md:p-2 blockchain-agent-dashboard-bonded-area'>
+        {/* <div className='group/AnimateArrow relative flex w-full flex-col rounded-20 bg-dashboardCardBg/75 p-[35px] transition duration-default max-md:p-2 blockchain-agent-dashboard-bonded-area'>
           <div className='el-DashboardCardTitleWrapper mb-2 flex items-start justify-between gap-1 max-md:mb-1'>
             <div className='el-DashboardCardTitleContent flex items-start'>
               <h3 className='el-DashboardCardTitle font-500 uppercase text-primaryColor min-h-2 text-md leading-20px max-md:min-h-[16px] max-md:text-xs max-md:leading-[16px]'>
@@ -239,8 +276,8 @@ const Details = () => {
                   <label className='mb-1 text-md font-500 text-textMuted max-md:text-sm max-md:leading-20px'>
                     Self Bonded
                   </label>
-                  <p className='m-0 text-[24px] font-400 uppercase max-md:text-md max-md:leading-20px'>
-                    120,101 LUNC
+                  <p className='text-white m-0 text-[24px] font-400 uppercase max-md:text-md max-md:leading-20px'>
+                    {validatorInfo.selfBonded} LUNC
                   </p>
                   <p className='m-0 text-md font-400 text-textMuted  max-md:text-sm max-md:leading-[18px]'>
                     0.01%
@@ -251,8 +288,8 @@ const Details = () => {
                   <label className='mb-1 text-md font-500 text-textMuted max-md:text-sm max-md:leading-20px'>
                     Delegated
                   </label>
-                  <p className='m-0 text-[24px] font-400 uppercase max-md:text-md max-md:leading-20px'>
-                    {validatorInfo.delegator_shares}
+                  <p className='text-white m-0 text-[24px] font-400 uppercase max-md:text-md max-md:leading-20px'>
+                    {validatorInfo.delegator_shares} LUNC
                   </p>
                   <p className='m-0 text-md font-400 text-textMuted  max-md:text-sm max-md:leading-[18px]'>
                     99.99%
@@ -261,7 +298,7 @@ const Details = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
         
         <div className='group/AnimateArrow relative flex flex-col rounded-20 bg-dashboardCardBg/75 p-[35px] transition duration-default max-md:p-2 blockchain-agent-dashboard-overview-area'>
             <div className='el-DashboardCardTitleWrapper mb-2 flex items-start justify-between gap-1 max-md:mb-1'>
@@ -272,7 +309,7 @@ const Details = () => {
               </div>
             </div>
 
-            <div className='el-DashboardCardContent flex-1'>
+            {/* <div className='el-DashboardCardContent flex-1'>
               <div className='flex h-full flex-col items-stretch justify-between max-md:pt-2'>
                 <div className='el-SummaryListRow flex items-center justify-between gap-2'>
                   <label className='el-SummaryListLabel flex items-center gap-1 whitespace-nowrap text-md font-500 leading-[36px] text-lightGrayBrandColor max-md:text-sm max-md:leading-[24px]'>
@@ -285,7 +322,7 @@ const Details = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <span className='el-SummaryDivider my-1.5 h-0.1 w-full bg-borderLight'></span>
 

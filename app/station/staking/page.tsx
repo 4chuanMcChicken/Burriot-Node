@@ -115,7 +115,6 @@ const wallet = () => {
                   website: val.description.website,
                   id: val.description.identity
                 },
-                delegator_shares: formatNumber(parseInt(val.delegator_shares)),
                 imageLoaded: true
               };
             });
@@ -202,7 +201,7 @@ const wallet = () => {
                                 />
                               )}
                             </div>
-                            <Link href={`/station/staking/${validator.operator_address}`} passHref>
+                            <Link href={`/station/staking/${validator.operator_address}?rank=${validator.rank}`} passHref>
                               <div style={{
                                   maxWidth: '270px',
                                   whiteSpace: 'nowrap',
