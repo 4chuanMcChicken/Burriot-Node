@@ -1,6 +1,9 @@
 export const metadata = {
-  title: 'Home - Simple',
-  description: 'Page description',
+  title: 'Burrito Lab - All-in-One Blockchain Services Hub',
+  description:
+    'Burrito Lab offers comprehensive multichain services for advanced transaction monitoring, analytics, and beyond, focusing on developing advanced technologies on the Terra Classic blockchain.',
+  keywords:
+    'Burrito Lab, Blockchain Services, Terra Classic blockchain, Transaction Monitoring, Analytics, Blockchain Hub',
 };
 
 import Hero from '@/components/hero-home';

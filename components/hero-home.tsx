@@ -14,37 +14,6 @@ import Head from 'next/head';
 export default function HeroHome() {
   return (
     <section className="relative ">
-      <Head>
-        <title>Burrito Lab - All-in-One Blockchain Services Hub</title>
-        <meta
-          name="description"
-          content="Burrito Lab offers comprehensive multichain services for advanced transaction monitoring, analytics, and beyond, focusing on developing advanced technologies on the Terra Classic blockchain."
-        />
-        <meta
-          name="keywords"
-          content="Burrito Lab, Blockchain Services, Terra Classic blockchain, Transaction Monitoring, Analytics, Blockchain Hub"
-        />
-        <meta
-          property="og:title"
-          content="Burrito Lab - All-in-One Blockchain Services Hub"
-        />
-        <meta
-          property="og:description"
-          content="Burrito Lab offers comprehensive multichain services for advanced transaction monitoring, analytics, and beyond, focusing on developing advanced technologies on the Terra Classic blockchain."
-        />
-        <meta property="og:image" content="/public/images/bg4.jpg" />
-        <meta property="og:url" content="https://burrito.money" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="Burrito Lab - All-in-One Blockchain Services Hub"
-        />
-        <meta
-          name="twitter:description"
-          content="Burrito Lab offers comprehensive multichain services for advanced transaction monitoring, analytics, and beyond, focusing on developing advanced technologies on the Terra Classic blockchain."
-        />
-        <meta name="twitter:image" content="/public/images/bg4.jpg" />
-      </Head>
       <PageIllustration />
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Hero content */}
