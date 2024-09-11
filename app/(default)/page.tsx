@@ -4,6 +4,37 @@ export const metadata = {
     'Burrito Lab offers comprehensive multichain services for advanced transaction monitoring, analytics, and beyond, focusing on developing advanced technologies on the Terra Classic blockchain.',
   keywords:
     'Burrito Lab, Blockchain Services, Terra Classic blockchain, Transaction Monitoring, Analytics, Blockchain Hub',
+  icons: {
+    icon: '/favicon.ico',
+  },
+  metadataBase: new URL('https://burrito.money'),
+  openGraph: {
+    title: 'Burrito Lab - All-in-One Blockchain Services Hub',
+    description:
+      'Burrito Lab offers comprehensive multichain services for advanced transaction monitoring, analytics, and beyond, focusing on developing advanced technologies on the Terra Classic blockchain.',
+    url: 'https://burritolab.com',
+    type: 'website',
+    images: [
+      {
+        url: '/images/BurritoLogo.png',
+        width: 800,
+        height: 600,
+        alt: 'Burrito Lab Logo',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Burrito Lab - All-in-One Blockchain Services Hub',
+    description:
+      'Burrito Lab offers comprehensive multichain services for advanced transaction monitoring, analytics, and beyond, focusing on developing advanced technologies on the Terra Classic blockchain.',
+    images: [
+      {
+        url: '/images/BurritoLogo.png',
+        alt: 'Burrito Lab Twitter Image',
+      },
+    ],
+  },
 };
 
 import Hero from '@/components/hero-home';
